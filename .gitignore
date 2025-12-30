@@ -33,13 +33,9 @@ venv.bak/
 session-*
 *.session
 
-# Downloaded Instagram Content
-*/
-!asset/
-!.vscode/
-*.jpg
-*.png
-*.mp4
+# Downloaded Instagram Content (in specific folder)
+downloads/
+instagram_content/
 *.json.xz
 *.txt.xz
 
