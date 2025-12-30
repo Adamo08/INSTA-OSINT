@@ -52,7 +52,14 @@ try:
         {Wh}  <----- {Gr}O S I N T       {Wh}I N S T A G R A M       {Wh}B Y      {Gr}H U N B Y T S {Wh}----->  
         """)
         IG_INSTA = instaloader.Instaloader()
-        IG_INSTA.login(US, PW)
+        
+        try:
+            IG_INSTA.login(US, PW)
+        except instaloader.exceptions.TwoFactorAuthRequiredException:
+            print(f"\n       {Wh}[ {Gr}! {Wh}] {Ye}Two-factor authentication required!")
+            two_factor_code = input(f"       {Wh}[ {Gr}+ {Wh}] INPUT 2FA CODE : {Re}")
+            IG_INSTA.two_factor_login(two_factor_code)
+        
         if not IG_INSTA.context.is_logged_in:
             IG_INSTA.context.log(f"\n       {Wh}[ {Gr}+ {Wh}] {Re}Login failed!, you account wrong")
         else:
@@ -80,17 +87,19 @@ try:
         print(profile_pic)
         print()
         print(f"       {Wh}[ {Gr}+ {Wh}]{Wh} Download {Gr}target post : ")
-        for post in profile.get_posts():
-            IG_INSTA.download_post(post, target=profile.username)
-        print()
-        print(f"       {Wh}[ {Gr}+ {Wh}]{Wh} Download {Gr}igtv post : ")
-        for post in IG_INSTA.get_feed_posts():
-            IG_INSTA.download_post(post, target=profile.username)
+        try:
+            for post in profile.get_posts():
+                IG_INSTA.download_post(post, target=profile.username)
+        except Exception as e:
+            print(f"       {Wh}[ {Ye}! {Wh}] {Ye}Error downloading posts: {str(e)}")
         print()
         print(f"       {Wh}[ {Gr}+ {Wh}]{Wh} Download {Gr}highlights post : ")
-        for highlight in IG_INSTA.get_highlights(profile):
-            for post in highlight.get_items():
-                IG_INSTA.download_storyitem(post, target=profile.username)
+        try:
+            for highlight in IG_INSTA.get_highlights(profile):
+                for post in highlight.get_items():
+                    IG_INSTA.download_storyitem(post, target=profile.username)
+        except Exception as e:
+            print(f"       {Wh}[ {Ye}! {Wh}] {Ye}Error downloading highlights: {str(e)}")
         print()
 
         def animasi():    
